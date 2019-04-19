@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +21,7 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
-import escapadetechnologies.com.moviedbusingmvpretrofit.MainActivity;
+import escapadetechnologies.com.moviedbusingmvpretrofit.movie_list.MovieListActivity;
 import escapadetechnologies.com.moviedbusingmvpretrofit.R;
 import escapadetechnologies.com.moviedbusingmvpretrofit.model.Movie;
 import escapadetechnologies.com.moviedbusingmvpretrofit.network.APIClient;
@@ -30,11 +29,11 @@ import escapadetechnologies.com.moviedbusingmvpretrofit.network.APIClient;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>{
 
     private List<Movie> movieList;
-    private MainActivity mainActivity;
+    private MovieListActivity movieListActivity;
 
-    public MoviesAdapter(List<Movie> movieList, MainActivity mainActivity) {
+    public MoviesAdapter(List<Movie> movieList, MovieListActivity movieListActivity) {
         this.movieList = movieList;
-        this.mainActivity = mainActivity;
+        this.movieListActivity = movieListActivity;
     }
 
     @NonNull
@@ -46,7 +45,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     @SuppressLint("CheckResult")
     @Override
-    public void onBindViewHolder(@NonNull final MoviesViewHolder moviesViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final MoviesViewHolder moviesViewHolder, final int i) {
 
         Movie movie = movieList.get(i);
 
@@ -55,7 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         moviesViewHolder.movie_ratings.setText(String.valueOf(movie.getRating()));
 
 
-        Glide.with(mainActivity)
+        Glide.with(movieListActivity)
                 .load(APIClient.IMAGE_BASE_URL + movie.getThumbPath())
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -73,6 +72,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 .apply(new RequestOptions().placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_background))
                 .into(moviesViewHolder.movie_thumb);
 
+        moviesViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieListActivity.onMovieItemClick(i);
+            }
+        });
 
     }
 
@@ -95,6 +100,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             movie_title = itemView.findViewById(R.id.movie_title);
             movie_thumb = itemView.findViewById(R.id.movie_thumb);
             load_image = itemView.findViewById(R.id.load_image);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 }

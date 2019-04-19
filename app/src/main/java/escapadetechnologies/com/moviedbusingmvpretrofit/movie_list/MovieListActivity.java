@@ -1,11 +1,11 @@
-package escapadetechnologies.com.moviedbusingmvpretrofit;
+package escapadetechnologies.com.moviedbusingmvpretrofit.movie_list;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -15,16 +15,17 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import escapadetechnologies.com.moviedbusingmvpretrofit.R;
+import escapadetechnologies.com.moviedbusingmvpretrofit.movie_detail.MoviesDetailActivity;
 import escapadetechnologies.com.moviedbusingmvpretrofit.adapter.MoviesAdapter;
 import escapadetechnologies.com.moviedbusingmvpretrofit.model.Movie;
-import escapadetechnologies.com.moviedbusingmvpretrofit.movie_list.MovieListContract;
-import escapadetechnologies.com.moviedbusingmvpretrofit.movie_list.ShowEmptyView;
 import escapadetechnologies.com.moviedbusingmvpretrofit.presenter.MovieListPresenter;
 import escapadetechnologies.com.moviedbusingmvpretrofit.utilities.GridSpacingItemDecoration;
 
+import static escapadetechnologies.com.moviedbusingmvpretrofit.utilities.Constants.KEY_MOVIE_ID;
 import static escapadetechnologies.com.moviedbusingmvpretrofit.utilities.GridSpacingItemDecoration.dpToPx;
 
-public class MainActivity extends AppCompatActivity implements MovieListContract.View, ShowEmptyView {
+public class MovieListActivity extends AppCompatActivity implements MovieListContract.View, ShowEmptyView , MovieItemClickListener {
 
     private static final String TAG = "MovieListActivity";
 
@@ -156,5 +157,17 @@ public class MainActivity extends AppCompatActivity implements MovieListContract
 
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onMovieItemClick(int position) {
+
+        if (position == -1){
+            return;
+        }
+        Intent detailIntent = new Intent(this, MoviesDetailActivity.class);
+        detailIntent.putExtra(KEY_MOVIE_ID,movieList.get(position).getId());
+        startActivity(detailIntent);
+
     }
 }

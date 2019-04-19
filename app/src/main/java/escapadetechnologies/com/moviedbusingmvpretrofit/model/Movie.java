@@ -23,7 +23,8 @@ public class Movie {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-
+    @SerializedName("credits")
+    private Credits credits;
 
     @SerializedName("runtime")
     private String runTime;
@@ -34,7 +35,7 @@ public class Movie {
     @SerializedName("homepage")
     private String homepage;
 
-    public Movie(int id, String title, String releaseDate, float rating, String thumbPath, String overview, String backdropPath, String runTime, String tagline, String homepage) {
+    public Movie(int id, String title, String releaseDate, float rating, String thumbPath, String overview, String backdropPath, Credits credits, String runTime, String tagline, String homepage) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -42,6 +43,7 @@ public class Movie {
         this.thumbPath = thumbPath;
         this.overview = overview;
         this.backdropPath = backdropPath;
+        this.credits = credits;
         this.runTime = runTime;
         this.tagline = tagline;
         this.homepage = homepage;
@@ -127,7 +129,13 @@ public class Movie {
         this.homepage = homepage;
     }
 
+    public Credits getCredits() {
+        return credits;
+    }
 
+    public void setCredits(Credits credits) {
+        this.credits = credits;
+    }
 
     @Override
     public String toString() {
@@ -137,6 +145,7 @@ public class Movie {
                 ", releaseDate='" + releaseDate + '\'' +
                 ", rating=" + rating +
                 ", thumbPath='" + thumbPath + '\'' +
+                ", credits='" + credits + '\'' +
                 ", overview='" + overview + '\'' +
                 ", backdropPath='" + backdropPath + '\'' +
                 ", runTime='" + runTime + '\'' +
