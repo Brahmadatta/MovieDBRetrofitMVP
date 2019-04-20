@@ -19,7 +19,8 @@ public class MoviesDetailModel implements MovieDetailsContract.Model {
 
         APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
 
-        Call<Movie> call = apiInterface.getMovieDetails(movie_id,API_KEY,CREDITS);
+        Call<Movie> call = apiInterface.getMovieDetails(movie_id, API_KEY, CREDITS);
+        //Call<Movie> call = apiInterface.getMovieDetails(movie_id,API_KEY,CREDITS);
 
         call.enqueue(new Callback<Movie>() {
             @Override

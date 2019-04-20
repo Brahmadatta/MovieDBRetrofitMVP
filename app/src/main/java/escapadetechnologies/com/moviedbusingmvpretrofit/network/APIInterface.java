@@ -15,7 +15,8 @@ public interface APIInterface {
     //Call<MovieListResponse> getPopularMovies(@Query("api_key") String api_key,@Query("page") int page_no);
 
     @GET("movie/{movie_id}")
-    Call<Movie> getMovieDetails(@Path("movie_id") int movie_id, @Query("api_key") String api_key, @Query("append_to_response") String credits);
+    Call<Movie> getMovieDetails(@Path("movie_id") int movieId, @Query("api_key") String apiKey, @Query("append_to_response") String credits);
+    //Call<Movie> getMovieDetails(@Path("movie_id") int movie_id, @Query("api_key") String api_key, @Query("append_to_response") String credits);
 
 
 }

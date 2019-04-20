@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,143 +35,170 @@ import escapadetechnologies.com.moviedbusingmvpretrofit.presenter.MoviesDetailPr
 
 import static escapadetechnologies.com.moviedbusingmvpretrofit.utilities.Constants.KEY_MOVIE_ID;
 
-public class MoviesDetailActivity extends AppCompatActivity implements MovieDetailsContract.View{
+public class MoviesDetailActivity extends AppCompatActivity implements MovieDetailsContract.View {
 
-    private ImageView backdrop;
-    private ProgressBar backdropLoad,castLoad;
-    private TextView movie_title,releaseDate,movieRatings,overview,homepage_value,tagline_value,runtimeValue;
-    private List<Cast> castList;
-
-    private MoviesDetailPresenter moviesDetailPresenter;
+    private ImageView ivBackdrop;
+    private ProgressBar pbLoadBackdrop;
+    private TextView tvMovieTitle;
+    private TextView tvMovieReleaseDate;
+    private TextView tvMovieRatings;
+    private TextView tvOverview;
     private CastAdapter castAdapter;
+    private List<Cast> castList;
+    private ProgressBar pbLoadCast;
+    private TextView tvHomepageValue;
+    private TextView tvTaglineValue;
+    private TextView tvRuntimeValue;
 
-    private String movie_name;
+    private String movieName;
 
+    private MoviesDetailPresenter movieDetailsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_detail);
 
-        initCollapsingToolBar();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        initCollapsingToolbar();
 
         initUI();
 
-        Intent intent = getIntent();
-        int movieId = intent.getIntExtra(KEY_MOVIE_ID,0);
+        Intent mIntent = getIntent();
+        int movieId = mIntent.getIntExtra(KEY_MOVIE_ID, 0);
 
-        moviesDetailPresenter = new MoviesDetailPresenter(this);
-        moviesDetailPresenter.requestMovieData(movieId);
-
+        movieDetailsPresenter = new MoviesDetailPresenter(this);
+        movieDetailsPresenter.requestMovieData(movieId);
 
     }
 
-
-
+    /**
+     * Initializing UI components
+     */
     private void initUI() {
 
-        backdrop = findViewById(R.id.backDrop);
-        backdropLoad = findViewById(R.id.load_backdrop);
-        movie_title = findViewById(R.id.movie_title);
-        releaseDate = findViewById(R.id.release_date);
-        movieRatings = findViewById(R.id.movie_ratings);
-        overview = findViewById(R.id.overView_title);
+        ivBackdrop = findViewById(R.id.iv_backdrop);
+        pbLoadBackdrop = findViewById(R.id.pb_load_backdrop);
+        tvMovieTitle = findViewById(R.id.tv_movie_title);
+        tvMovieReleaseDate = findViewById(R.id.tv_release_date);
+        tvMovieRatings = findViewById(R.id.tv_movie_ratings);
+        tvOverview = findViewById(R.id.tv_movie_overview);
 
         castList = new ArrayList<>();
-        RecyclerView recyclerView = findViewById(R.id.recyclerView_cast);
-        castAdapter = new CastAdapter(this,castList);
-        recyclerView.setAdapter(castAdapter);
+        RecyclerView rvCast = findViewById(R.id.rv_cast);
+        castAdapter = new CastAdapter(this, castList);
+        rvCast.setAdapter(castAdapter);
+        pbLoadCast = findViewById(R.id.pb_cast_loading);
 
-        castLoad = findViewById(R.id.cast_loading);
-
-        homepage_value = findViewById(R.id.homepage_value);
-        tagline_value = findViewById(R.id.tagline_value);
-        runtimeValue = findViewById(R.id.runtime_value);
-
+        tvHomepageValue = findViewById(R.id.tv_homepage_value);
+        tvTaglineValue = findViewById(R.id.tv_tagline_value);
+        tvRuntimeValue = findViewById(R.id.tv_runtime_value);
     }
 
-    private void initCollapsingToolBar() {
+    /**
+     * Initializing collapsing toolbar
+     * Will show and hide the toolbar title on scroll
+     */
+    private void initCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbar =
+                findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(" ");
 
-        final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle("");
-
-        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
+        // hiding & showing the title when toolbar expanded & collapsed
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-
             boolean isShow = false;
             int scrollRange = -1;
+
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1){
+                if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
-
-                if (scrollRange + verticalOffset == 0){
-                    collapsingToolbarLayout.setTitle(movie_name);
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(movieName);
                     isShow = true;
-                }else if (isShow){
-                    collapsingToolbarLayout.setTitle(" ");
+                } else if (isShow) {
+                    collapsingToolbar.setTitle(" ");
                     isShow = false;
                 }
             }
         });
-
     }
 
     @Override
     public void showProgress() {
-        backdropLoad.setVisibility(View.VISIBLE);
+        pbLoadBackdrop.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
-        backdropLoad.setVisibility(View.GONE);
+        pbLoadCast.setVisibility(View.GONE);
     }
 
     @Override
     public void setDataToViews(Movie movie) {
 
-        if (movie != null){
+        if (movie != null) {
 
-            movie_name = movie.getTitle();
-            movie_title.setText(movie.getTitle());
-            releaseDate.setText(movie.getReleaseDate());
-            movieRatings.setText(String.valueOf(movie.getRating()));
-            overview.setText(movie.getOverview());
+            movieName = movie.getTitle();
+            tvMovieTitle.setText(movie.getTitle());
+            tvMovieReleaseDate.setText(movie.getReleaseDate());
+            tvMovieRatings.setText(String.valueOf(movie.getRating()));
+            tvOverview.setText(movie.getOverview());
 
+            // loading album cover using Glide library
             Glide.with(this)
                     .load(APIClient.BACKDROP_BASE_URL + movie.getBackdropPath())
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            backdropLoad.setVisibility(View.GONE);
+                            pbLoadBackdrop.setVisibility(View.GONE);
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            backdropLoad.setVisibility(View.GONE);
+                            pbLoadBackdrop.setVisibility(View.GONE);
                             return false;
                         }
                     })
                     .apply(new RequestOptions().placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_background))
-                    .into(backdrop);
+                    .into(ivBackdrop);
 
             castList.clear();
             castList.addAll(movie.getCredits().getCast());
             castAdapter.notifyDataSetChanged();
 
-            tagline_value.setText(movie.getTagline() != null ? movie.getTagline() : "N/A");
-            homepage_value.setText(movie.getHomepage() != null ? movie.getHomepage() : "N/A");
-            runtimeValue.setText(movie.getRunTime() != null ? movie.getRunTime() : "N/A");
+            tvTaglineValue.setText(movie.getTagline() != null ? movie.getTagline() : "N/A");
+            tvHomepageValue.setText(movie.getHomepage() != null ? movie.getHomepage() : "N/A");
+            tvRuntimeValue.setText(movie.getRunTime() != null ? movie.getRunTime() : "N/A");
         }
+
     }
 
     @Override
-    public void onResponseFailure(Throwable t) {
-        Toast.makeText(this, "Errorrr", Toast.LENGTH_SHORT).show();
+    public void onResponseFailure(Throwable throwable) {
+
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        movieDetailsPresenter.onDestroy();
     }
 }

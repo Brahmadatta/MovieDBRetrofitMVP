@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/cast_width"
     android:layout_height="wrap_content"
     android:layout_marginRight="10dp"
     android:layout_marginTop="10dp"
@@ -9,8 +9,8 @@
 
     <RelativeLayout
         android:id="@+id/rl_movie_thumb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="@dimen/cast_width"
+        android:layout_height="@dimen/cast_heigh">
 
         <ImageView
             android:id="@+id/iv_profile_pic"
@@ -35,9 +35,9 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingTop="10dp"
-        android:textColor="#000"
-        android:textSize="20sp"
+        android:paddingTop="@dimen/card_content_padding"
+        android:textColor="@color/colorTitle"
+        android:textSize="@dimen/overview_text_size"
         android:typeface="sans" />
 
     <TextView
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="20sp"
+        android:textSize="@dimen/overview_text_size"
         android:typeface="sans" />
 
 </LinearLayout>
